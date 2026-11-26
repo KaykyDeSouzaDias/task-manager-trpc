@@ -1,7 +1,7 @@
 import { TaskList } from "@/components/TaskList";
 import { serverApi } from "@/server/caller";
 
-// Sempre renderiza no servidor a cada request (SSR) — os dados mudam em memória.
+// Always rendered on the server on every request (SSR) — the in-memory data changes.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {

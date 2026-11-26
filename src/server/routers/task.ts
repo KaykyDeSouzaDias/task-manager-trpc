@@ -6,7 +6,7 @@ import { taskInput } from "../schemas";
 import { tasks, type Task } from "../store";
 
 const notFound = (id: string) =>
-  new TRPCError({ code: "NOT_FOUND", message: `Tarefa "${id}" não encontrada` });
+  new TRPCError({ code: "NOT_FOUND", message: `Task "${id}" not found` });
 
 const find = (id: string) => {
   const task = tasks.find((t) => t.id === id);
@@ -15,11 +15,11 @@ const find = (id: string) => {
 };
 
 export const taskRouter = router({
-  // Paginação por cursor (offset) — alimenta o infinite scroll. Mais novas primeiro.
+  // Cursor (offset) pagination — feeds the infinite scroll. Newest first.
   list: publicProcedure
     .input(
       z.object({
-        cursor: z.number().int().min(0).nullish(), // o client do tRPC envia null na 1ª página
+        cursor: z.number().int().min(0).nullish(), // the tRPC client sends null on the first page
         limit: z.number().int().min(1).max(50).default(10),
       }),
     )

@@ -1,6 +1,6 @@
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-  // Gera um servidor mínimo em .next/standalone (usado pela imagem Docker).
+  // Generates a minimal server in .next/standalone (used by the Docker image).
   output: "standalone",
 };
 

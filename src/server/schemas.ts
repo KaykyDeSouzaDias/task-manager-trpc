@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-// Schema de validação compartilhado: o backend (tRPC) e o formulário usam a mesma regra.
+// Shared validation schema: the backend (tRPC) and the form use the same rules.
 export const taskInput = z.object({
-  titulo: z.string().trim().min(1, "O título é obrigatório").max(100, "Máximo de 100 caracteres"),
-  descricao: z.string().trim().max(500, "Máximo de 500 caracteres").optional(),
+  titulo: z.string().trim().min(1, "Title is required").max(100, "Maximum of 100 characters"),
+  descricao: z.string().trim().max(500, "Maximum of 500 characters").optional(),
 });

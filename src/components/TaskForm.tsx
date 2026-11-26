@@ -9,7 +9,7 @@ import type { Task } from "@/server/store";
 import { useTRPC } from "@/trpc/provider";
 import { Alert } from "./Alert";
 
-/** Formulário único para criar (sem `task`) e editar (com `task`). */
+/** Single form for creating (no `task`) and editing (with `task`). */
 export function TaskForm({ task }: { task?: Task }) {
   const trpc = useTRPC();
   const router = useRouter();
@@ -29,7 +29,7 @@ export function TaskForm({ task }: { task?: Task }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Validação no frontend com o mesmo schema usado pelo backend.
+    // Frontend validation using the same schema as the backend.
     const parsed = taskInput.safeParse({ titulo, descricao: descricao || undefined });
     if (!parsed.success) {
       const fields = parsed.error.flatten().fieldErrors;
@@ -43,14 +43,14 @@ export function TaskForm({ task }: { task?: Task }) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <h1>{task ? "Editar tarefa" : "Nova tarefa"}</h1>
+      <h1>{task ? "Edit task" : "New task"}</h1>
 
       {mutation.isError && (
-        <Alert feedback={{ type: "error", message: `Erro: ${mutation.error.message}` }} />
+        <Alert feedback={{ type: "error", message: `Error: ${mutation.error.message}` }} />
       )}
 
       <div className="field" style={{ marginTop: 20 }}>
-        <label htmlFor="titulo">Título *</label>
+        <label htmlFor="titulo">Title *</label>
         <input
           id="titulo"
           value={titulo}
@@ -62,7 +62,7 @@ export function TaskForm({ task }: { task?: Task }) {
       </div>
 
       <div className="field">
-        <label htmlFor="descricao">Descrição</label>
+        <label htmlFor="descricao">Description</label>
         <textarea
           id="descricao"
           rows={4}
@@ -75,9 +75,9 @@ export function TaskForm({ task }: { task?: Task }) {
 
       <div className="actions">
         <button className="btn btn-primary" type="submit" disabled={mutation.isPending || mutation.isSuccess}>
-          {mutation.isPending ? "Salvando..." : task ? "Salvar alterações" : "Criar tarefa"}
+          {mutation.isPending ? "Saving..." : task ? "Save changes" : "Create task"}
         </button>
-        <Link className="btn" href="/">Cancelar</Link>
+        <Link className="btn" href="/">Cancel</Link>
       </div>
     </form>
   );

@@ -6,24 +6,24 @@ import { createCallerFactory } from "@/server/trpc";
 
 const api = createCallerFactory(appRouter)({});
 
-// Cada teste começa com o "banco" em memória vazio.
+// Each test starts with an empty in-memory "database".
 beforeEach(() => {
   tasks.length = 0;
 });
 
 describe("task router", () => {
-  it("cria tarefa com id e dataCriacao gerados", async () => {
-    const task = await api.task.create({ titulo: "  Estudar  ", descricao: "algo" });
-    expect(task).toMatchObject({ titulo: "Estudar", descricao: "algo" });
+  it("creates a task with generated id and dataCriacao", async () => {
+    const task = await api.task.create({ titulo: "  Study  ", descricao: "something" });
+    expect(task).toMatchObject({ titulo: "Study", descricao: "something" });
     expect(task.id).toBeTruthy();
     expect(typeof task.dataCriacao).toBe("number");
   });
 
-  it("não cria tarefa sem título", async () => {
-    await expect(api.task.create({ titulo: "   " })).rejects.toThrow(/título é obrigatório/);
+  it("does not create a task without a title", async () => {
+    await expect(api.task.create({ titulo: "   " })).rejects.toThrow(/Title is required/);
   });
 
-  it("lista com paginação por cursor, das mais novas para as mais antigas", async () => {
+  it("lists with cursor pagination, newest first", async () => {
     for (let i = 1; i <= 5; i++) {
       tasks.push({ id: `${i}`, titulo: `T${i}`, dataCriacao: i });
     }
@@ -36,15 +36,15 @@ describe("task router", () => {
     expect(page3.nextCursor).toBeUndefined();
   });
 
-  it("atualiza uma tarefa existente", async () => {
-    const { id } = await api.task.create({ titulo: "Antes" });
-    const updated = await api.task.update({ id, titulo: "Depois" });
-    expect(updated.titulo).toBe("Depois");
-    expect((await api.task.byId({ id })).titulo).toBe("Depois");
+  it("updates an existing task", async () => {
+    const { id } = await api.task.create({ titulo: "Before" });
+    const updated = await api.task.update({ id, titulo: "After" });
+    expect(updated.titulo).toBe("After");
+    expect((await api.task.byId({ id })).titulo).toBe("After");
   });
 
-  it("remove uma tarefa", async () => {
-    const { id } = await api.task.create({ titulo: "Remover" });
+  it("deletes a task", async () => {
+    const { id } = await api.task.create({ titulo: "Remove" });
     await api.task.delete({ id });
     expect(tasks).toHaveLength(0);
   });
@@ -53,8 +53,8 @@ describe("task router", () => {
     ["byId", (id: string) => api.task.byId({ id })],
     ["update", (id: string) => api.task.update({ id, titulo: "x" })],
     ["delete", (id: string) => api.task.delete({ id })],
-  ])("%s de tarefa inexistente retorna NOT_FOUND", async (_name, call) => {
-    const err = await call("nao-existe").catch((e) => e);
+  ])("%s on a missing task returns NOT_FOUND", async (_name, call) => {
+    const err = await call("does-not-exist").catch((e) => e);
     expect(err).toBeInstanceOf(TRPCError);
     expect(err.code).toBe("NOT_FOUND");
   });

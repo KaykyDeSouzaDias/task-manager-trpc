@@ -1,4 +1,4 @@
-# Build em múltiplos estágios para uma imagem final pequena.
+# Multi-stage build to keep the final image small.
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./

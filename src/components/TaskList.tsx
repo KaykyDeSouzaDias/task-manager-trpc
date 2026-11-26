@@ -10,8 +10,8 @@ import { TaskItem } from "./TaskItem";
 type Page = RouterOutputs["task"]["list"];
 
 /**
- * Recebe a 1ª página já carregada no servidor (SSR) e usa como `initialData`;
- * as próximas páginas são buscadas via tRPC quando o sentinel entra na tela.
+ * Receives the first page already loaded on the server (SSR) and uses it as `initialData`;
+ * the next pages are fetched via tRPC when the sentinel enters the viewport.
  */
 export function TaskList({ initialPage }: { initialPage: Page }) {
   const trpc = useTRPC();
@@ -31,14 +31,14 @@ export function TaskList({ initialPage }: { initialPage: Page }) {
   const remove = useMutation(
     trpc.task.delete.mutationOptions({
       onSuccess: () => {
-        setFeedback({ type: "success", message: "Tarefa excluída com sucesso." });
+        setFeedback({ type: "success", message: "Task deleted successfully." });
         return queryClient.invalidateQueries(trpc.task.list.pathFilter());
       },
-      onError: (err) => setFeedback({ type: "error", message: `Não foi possível excluir: ${err.message}` }),
+      onError: (err) => setFeedback({ type: "error", message: `Could not delete: ${err.message}` }),
     }),
   );
 
-  // Infinite scroll: observa um elemento no fim da lista.
+  // Infinite scroll: watches an element at the end of the list.
   const sentinel = useRef<HTMLDivElement>(null);
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;
   useEffect(() => {
@@ -56,17 +56,17 @@ export function TaskList({ initialPage }: { initialPage: Page }) {
   return (
     <>
       <div className="row">
-        <h1>Tarefas</h1>
-        <Link className="btn btn-primary" href="/tasks/new">+ Nova tarefa</Link>
+        <h1>Tasks</h1>
+        <Link className="btn btn-primary" href="/tasks/new">+ New task</Link>
       </div>
 
       <Alert feedback={feedback} />
       {query.isError && (
-        <Alert feedback={{ type: "error", message: `Erro ao carregar tarefas: ${query.error.message}` }} />
+        <Alert feedback={{ type: "error", message: `Error loading tasks: ${query.error.message}` }} />
       )}
 
       {tasks.length === 0 ? (
-        <p className="muted">Nenhuma tarefa cadastrada.</p>
+        <p className="muted">No tasks yet.</p>
       ) : (
         <ul className="list">
           {tasks.map((task) => (
@@ -84,7 +84,7 @@ export function TaskList({ initialPage }: { initialPage: Page }) {
       )}
 
       <div ref={sentinel} className="muted">
-        {isFetchingNextPage ? "Carregando mais..." : !hasNextPage && tasks.length > 0 ? "Fim da lista" : ""}
+        {isFetchingNextPage ? "Loading more..." : !hasNextPage && tasks.length > 0 ? "End of list" : ""}
       </div>
     </>
   );

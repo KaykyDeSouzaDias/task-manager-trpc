@@ -15,12 +15,12 @@ export function TaskItem({
       <div>
         <h2>{task.titulo}</h2>
         {task.descricao && <p>{task.descricao}</p>}
-        <small>Criada em {new Date(task.dataCriacao).toLocaleString("pt-BR")}</small>
+        <small>Created on {new Date(task.dataCriacao).toLocaleString("en-US")}</small>
       </div>
       <div className="actions">
-        <Link className="btn" href={`/tasks/${task.id}/edit`}>Editar</Link>
+        <Link className="btn" href={`/tasks/${task.id}/edit`}>Edit</Link>
         <button className="btn btn-danger" onClick={onDelete} disabled={deleting}>
-          {deleting ? "Excluindo..." : "Excluir"}
+          {deleting ? "Deleting..." : "Delete"}
         </button>
       </div>
     </li>

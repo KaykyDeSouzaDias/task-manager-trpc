@@ -19,26 +19,26 @@ const renderForm = () =>
   );
 
 describe("TaskForm", () => {
-  it("mostra erro e não envia quando o título está vazio", async () => {
+  it("shows an error and does not submit when the title is empty", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     renderForm();
 
-    await userEvent.click(screen.getByRole("button", { name: "Criar tarefa" }));
+    await userEvent.click(screen.getByRole("button", { name: "Create task" }));
 
-    expect(await screen.findByText("O título é obrigatório")).toBeInTheDocument();
+    expect(await screen.findByText("Title is required")).toBeInTheDocument();
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  it("limpa o erro e envia quando o título é preenchido", async () => {
+  it("clears the error and submits when the title is filled", async () => {
     const fetchSpy = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(new Response(JSON.stringify([{ result: { data: { id: "1" } } }])));
     renderForm();
 
-    await userEvent.type(screen.getByLabelText(/Título/), "Nova tarefa");
-    await userEvent.click(screen.getByRole("button", { name: "Criar tarefa" }));
+    await userEvent.type(screen.getByLabelText(/Title/), "New task");
+    await userEvent.click(screen.getByRole("button", { name: "Create task" }));
 
-    expect(screen.queryByText("O título é obrigatório")).not.toBeInTheDocument();
+    expect(screen.queryByText("Title is required")).not.toBeInTheDocument();
     expect(fetchSpy).toHaveBeenCalled();
   });
 });
